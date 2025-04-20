@@ -54,6 +54,15 @@
   </div>
 
   <script>
+    // 等待 Chart.js 載入完成
+    function waitForChartJs(callback) {
+      if (typeof Chart !== 'undefined') {
+        callback();
+      } else {
+        setTimeout(() => waitForChartJs(callback), 100);
+      }
+    }
+
     // 財經數據項目
     const dataItems = [
       { key: 'gold', label: '黃金價格 (美元/盎司)', chartId: 'gold-chart', api: 'TIME_SERIES_WEEKLY', symbol: 'GOLD' },
@@ -128,6 +137,11 @@
       const errorDiv = document.getElementById('error');
 
       try {
+        // 檢查 Chart.js 是否載入
+        if (typeof Chart === 'undefined') {
+          throw new Error('無法載入 Chart.js，請檢查網路連線或稍後重試');
+        }
+
         // 抓取所有數據
         for (const item of dataItems) {
           allData[item.key] = await fetchData(item);
@@ -187,8 +201,8 @@
       }
     }
 
-    // 執行
-    init();
+    // 等待 Chart.js 載入後執行
+    waitForChartJs(init);
   </script>
 </body>
 </html>
