@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 export default async function handler(req, res) {
   const { api, symbol, from, to } = req.query;
   const API_KEY = process.env.ALPHA_VANTAGE_API_KEY;
