@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>財經數據追蹤</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -102,9 +102,16 @@
           url += `&from=${item.from}&to=${item.to}`;
         }
 
+        // 添加 1 秒延遲以避免 API 限制
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
         const response = await fetch(url);
         if (!response.ok) throw new Error('API請求失敗');
         const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
 
         if (item.api === 'TIME_SERIES_WEEKLY') {
           const weeklyData = data['Weekly Time Series'];
@@ -119,6 +126,7 @@
           return entries;
         } else if (item.api === 'CURRENCY_EXCHANGE_RATE') {
           const rate = parseFloat(data['Realtime Currency Exchange Rate']['5. Exchange Rate']);
+          if (!rate) throw new Error('無匯率數據');
           const mockDates = generateMockData().map(d => d.date);
           return mockDates.map(date => ({
             date,
@@ -148,31 +156,35 @@
         }
 
         // 繪製圖表
-        dataItems.forEach(item => {
-          const ctx = document.getElementById(item.chartId);
-          if (!ctx) {
-            throw new Error(`找不到圖表元素：${item.chartId}`);
-          }
-          const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: allData[item.key].map(d => d.date),
-              datasets: [{
-                label: item.label,
-                data: allData[item.key].map(d => d.value),
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1,
-              }],
-            },
-            options: {
-              responsive: true,
-              scales: {
-                x: { title: { display: true, text: '日期' } },
-                y: { title: { display: true, text: '數值' } },
+        for (const item of dataItems) {
+          try {
+            const ctx = document.getElementById(item.chartId);
+            if (!ctx) {
+              throw new Error(`找不到圖表元素：${item.chartId}`);
+            }
+            const chart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: allData[item.key].map(d => d.date),
+                datasets: [{
+                  label: item.label,
+                  data: allData[item.key].map(d => d.value),
+                  borderColor: 'rgb(75, 192, 192)',
+                  tension: 0.1,
+                }],
               },
-            },
-          });
-        });
+              options: {
+                responsive: true,
+                scales: {
+                  x: { title: { display: true, text: '日期' } },
+                  y: { title: { display: true, text: '數值' } },
+                },
+              },
+            });
+          } catch (error) {
+            console.error(`繪製${item.label}圖表失敗:`, error);
+          }
+        }
 
         // 匯出CSV
         document.getElementById('export-csv').addEventListener('click', () => {
