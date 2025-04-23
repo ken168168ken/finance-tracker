@@ -43,6 +43,7 @@
       margin-bottom: 30px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       border: 2px solid #d6e8ee; /* 淺藍邊框 */
+      position: relative; /* 確保 TOP 按鈕相對定位 */
     }
     .nav-buttons {
       display: flex;
@@ -79,6 +80,7 @@
       border: 2px solid #d6e8ee; /* 淺藍邊框 */
       border-radius: 5px;
       background-color: #f9fbfc; /* 淺藍背景 */
+      margin-bottom: 20px; /* 為 TOP 按鈕留出空間 */
     }
     /* 地中海風格的裝飾元素 */
     .divider {
@@ -91,6 +93,8 @@
       display: block;
       width: fit-content;
       margin: 10px 0 0 auto; /* 右下角 */
+      position: relative; /* 相對定位，確保不被其他元素影響 */
+      z-index: 10; /* 確保按鈕在圖表之上 */
     }
     /* 響應式設計 */
     @media (max-width: 768px) {
@@ -112,10 +116,18 @@
       }
       .tradingview-widget-container {
         height: 300px !important; /* 手機上縮小圖表高度 */
+        margin-bottom: 40px; /* 為 TOP 按鈕留出更多空間 */
       }
       .chart-header .download-btn {
         padding: 6px 10px; /* 手機上進一步縮小按鈕 */
         font-size: 0.8em;
+      }
+      .top-btn {
+        padding: 6px 12px; /* 小螢幕上縮小按鈕 */
+        font-size: 0.8em; /* 縮小字體 */
+        margin-top: 5px; /* 調整間距 */
+        position: relative; /* 確保定位正確 */
+        z-index: 10; /* 確保不被遮蓋 */
       }
     }
   </style>
