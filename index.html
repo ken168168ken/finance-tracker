@@ -89,6 +89,10 @@
       background: linear-gradient(to right, #0d5d8c, #d6e8ee, #0d5d8c); /* 藍色漸層 */
       margin: 30px 0;
     }
+    /* 為日元圖表區塊添加額外間距 */
+    #usdjpy-section {
+      padding-bottom: 80px; /* 相當於三行的高度，確保 TOP 按鈕有足夠空間 */
+    }
     /* 浮動 TOP 按鈕 */
     .floating-top-btn {
       position: fixed;
@@ -114,6 +118,24 @@
     }
     .floating-top-btn.visible {
       opacity: 1; /* 滾動後顯示 */
+    }
+    /* 右上角圓形 LOGO 按鈕 */
+    .logo-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-image: url('https://i.imgur.com/abc123.png'); /* 替換為您的 LOGO 圖片 URL */
+      background-size: cover;
+      background-position: center;
+      border-radius: 50%; /* 圓形設計 */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease; /* 懸停時放大動畫 */
+      z-index: 1000; /* 確保在最上層 */
+    }
+    .logo-btn:hover {
+      transform: scale(1.1); /* 懸停時放大 */
     }
     /* 響應式設計 */
     @media (max-width: 768px) {
@@ -149,11 +171,23 @@
         bottom: 20px;
         right: 20px;
       }
+      .logo-btn {
+        width: 50px;
+        height: 50px;
+        top: 15px;
+        right: 15px;
+      }
+      #usdjpy-section {
+        padding-bottom: 60px; /* 小螢幕上稍微減少間距，但仍確保空間 */
+      }
     }
   </style>
 </head>
 <body>
   <div id="top"></div> <!-- 頁面頂部錨點 -->
+  <!-- 右上角 LOGO 按鈕 -->
+  <a href="/" class="logo-btn" title="回到首頁"></a> <!-- 點擊後跳轉到首頁，您可以修改 href 為其他連結 -->
+  
   <div class="container">
     <h1>財經數據追蹤</h1>
     
