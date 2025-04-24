@@ -4,216 +4,111 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>財經數據追蹤 - 地中海風</title>
-  <!-- Google Fonts 引入地中海風格字體 -->
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <!-- 引入 Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    html {
-      scroll-behavior: smooth; /* 啟用平滑滾動 */
-    }
     body {
       margin: 0;
       font-family: 'Open Sans', sans-serif;
-      background-color: #f5f6f0; /* 沙色背景 */
-      color: #1a759f; /* 更亮的藍色正文文字 */
+      background-color: #f5f6f0;
+      color: #1a759f;
     }
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
-      position: relative; /* 為 LOGO 按鈕提供定位上下文 */
     }
     h1 {
       font-family: 'Lora', serif;
-      color: #0d5d8c; /* 更深的藍色標題 */
+      color: #0d5d8c;
       text-align: center;
       font-size: 2.5em;
       margin-bottom: 20px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
     h2 {
       font-family: 'Lora', serif;
-      color: #0d5d8c; /* 與 h1 一致 */
+      color: #0d5d8c;
       font-size: 1.8em;
-      margin: 0; /* 移除預設外邊距 */
-      display: inline-block; /* 讓標題與按鈕在同一行 */
+      margin: 0;
+      display: inline-block;
     }
     .section {
-      background-color: #ffffff; /* 白色背景，像地中海的白牆 */
+      background-color: #ffffff;
       border-radius: 10px;
       padding: 20px;
       margin-bottom: 30px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      border: 2px solid #d6e8ee; /* 淺藍邊框 */
+      border: 2px solid #d6e8ee;
     }
-    .nav-buttons {
-      display: flex;
-      flex-wrap: wrap; /* 按鈕在小螢幕上自動換行 */
-      gap: 15px; /* 調整間距，讓按鈕更協調 */
-      margin-bottom: 10px;
-    }
-    .download-btn, .nav-btn {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #0d5d8c; /* 與標題顏色一致的按鈕 */
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: 600;
-      transition: background-color 0.3s;
-    }
-    .download-btn:hover, .nav-btn:hover {
-      background-color: #1a759f; /* 按鈕懸停時變為正文顏色 */
-    }
-    /* 圖表標題與按鈕的容器 */
     .chart-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
     }
-    .chart-header .download-btn {
-      padding: 8px 15px; /* 稍微縮小按鈕 */
-      font-size: 0.9em; /* 縮小字體 */
+    .download-btn {
+      padding: 8px 15px;
+      background-color: #0d5d8c;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
     }
-    /* TradingView 圖表容器樣式 */
+    .download-btn:hover {
+      background-color: #1a759f;
+    }
     .tradingview-widget-container {
-      border: 2px solid #d6e8ee; /* 淺藍邊框 */
+      width: 100%;
+      height: 400px;
+      overflow: auto;
+      border: 2px solid #d6e8ee;
       border-radius: 5px;
-      background-color: #f9fbfc; /* 淺藍背景 */
-      margin-bottom: 10px; /* 減少間距，因為不再需要為 TOP 按鈕留空間 */
-      position: relative;
-      z-index: 1;
-    }
-    /* Chart.js 圖表容器樣式 */
-    .chart-container {
-      border: 2px solid #d6e8ee; /* 淺藍邊框 */
-      border-radius: 5px;
-      background-color: #f9fbfc; /* 淺藍背景 */
+      background-color: #f9fbfc;
       margin-bottom: 10px;
       position: relative;
-      z-index: 1;
-      height: 400px; /* 與 TradingView 圖表高度一致 */
     }
-    /* 地中海風格的裝飾元素 */
     .divider {
       height: 4px;
-      background: linear-gradient(to right, #0d5d8c, #d6e8ee, #0d5d8c); /* 藍色漸層 */
+      background: linear-gradient(to right, #0d5d8c, #d6e8ee, #0d5d8c);
       margin: 30px 0;
     }
-    /* 為日元圖表區塊添加額外間距 */
-    #usdjpy-section {
-      padding-bottom: 80px; /* 相當於三行的高度，確保 TOP 按鈕有足夠空間 */
-    }
-    /* 浮動 TOP 按鈕 */
-    .floating-top-btn {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      background-color: #0d5d8c; /* 與頁面主題一致的藍色 */
-      color: white;
-      text-align: center;
-      line-height: 50px; /* 垂直居中 */
-      font-size: 1.5em;
-      font-weight: bold;
-      border-radius: 50%; /* 圓形設計 */
-      text-decoration: none;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      opacity: 0; /* 初始隱藏 */
-      transition: opacity 0.3s ease, background-color 0.3s ease; /* 淡入淡出動畫 */
-      z-index: 1000; /* 確保在最上層 */
-    }
-    .floating-top-btn:hover {
-      background-color: #1a759f; /* 按鈕懸停時變為正文顏色 */
-    }
-    .floating-top-btn.visible {
-      opacity: 1; /* 滾動後顯示 */
-    }
-    /* 右上角圓形 LOGO 按鈕（固定在頁首） */
-    .logo-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background-image: url('https://github.com/ken168168ken/finance-tracker/blob/main/IMG_0413.jpg?raw=true'); /* 使用您提供的圖片網址 */
-      background-size: cover;
-      background-position: center;
-      border-radius: 50%; /* 圓形設計 */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease; /* 懸停時放大動畫 */
-      z-index: 1000; /* 確保在最上層 */
-    }
-    .logo-btn:hover {
-      transform: scale(1.1); /* 懸停時放大 */
-    }
-    /* 響應式設計 */
     @media (max-width: 768px) {
-      h1 {
-        font-size: 2em; /* 手機上縮小標題 */
-      }
-      h2 {
-        font-size: 1.5em;
-      }
-      .section {
-        padding: 15px;
-      }
-      .download-btn, .nav-btn {
-        padding: 8px 15px;
-        font-size: 0.9em;
-      }
-      .nav-buttons {
-        gap: 8px;
-      }
-      .tradingview-widget-container, .chart-container {
-        height: 300px !important; /* 手機上縮小圖表高度 */
-        margin-bottom: 10px; /* 減少間距 */
-      }
-      .chart-header .download-btn {
-        padding: 6px 10px; /* 手機上進一步縮小按鈕 */
-        font-size: 0.8em;
-      }
-      .floating-top-btn {
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        font-size: 1.2em;
-        bottom: 20px;
-        right: 20px;
-      }
-      .logo-btn {
-        width: 50px;
-        height: 50px;
-        top: 15px;
-        right: 15px;
-      }
-      #usdjpy-section {
-        padding-bottom: 60px; /* 小螢幕上稍微減少間距，但仍確保空間 */
-      }
+      h1 { font-size: 2em; }
+      h2 { font-size: 1.5em; }
+      .section { padding: 15px; }
+      .tradingview-widget-container { height: 300px; }
+      .download-btn { padding: 6px 10px; font-size: 0.9em; }
+    }
+    .nav-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .nav-btn {
+      padding: 10px 20px;
+      background-color: #0d5d8c;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+    .nav-btn:hover {
+      background-color: #1a759f;
     }
   </style>
 </head>
 <body>
-  <div id="top"></div> <!-- 頁面頂部錨點 -->
   <div class="container">
-    <!-- 右上角 LOGO 按鈕（固定在頁首） -->
-    <a href="/" class="logo-btn" title="回到首頁"></a> <!-- 點擊後跳轉到首頁，您可以修改 href 為其他連結 -->
-    
     <h1>財經數據追蹤</h1>
-    
-    <!-- 導航按鈕 -->
-    <div class="section">
-      <div class="nav-buttons">
-        <a href="#gold-section" class="nav-btn">黃金價格</a>
-        <a href="#tips-section" class="nav-btn">TIPS 實質利率</a>
-        <a href="#treasury-section" class="nav-btn">美債殖利率</a>
-        <a href="#dxy-section" class="nav-btn">美元指數</a>
-        <a href="#vix-section" class="nav-btn">VIX 恐慌指數</a>
-        <a href="#usdjpy-section" class="nav-btn">日元匯率</a>
-      </div>
+
+    <!-- 導航欄 -->
+    <div class="nav-bar">
+      <a href="#gold-section" class="nav-btn">黃金價格</a>
+      <a href="#tips-section" class="nav-btn">TIPS 實質利率</a>
+      <a href="#us-bond-section" class="nav-btn">美國債利率</a>
+      <a href="#usdjpy-section" class="nav-btn">美元指數</a>
+      <a href="#vix-section" class="nav-btn">VIX 恐慌指數</a>
+      <a href="#usdjpy-section" class="nav-btn">日元匯率</a>
     </div>
 
     <!-- 黃金價格圖表 -->
@@ -244,13 +139,13 @@
       </div>
     </div>
 
-    <!-- 分隔線 -->
     <div class="divider"></div>
 
-    <!-- TIPS 實質利率圖表 -->
+    <!-- TIPS 實質利率 -->
     <div id="tips-section" class="section">
       <div class="chart-header">
         <h2>TIPS 實質利率 (%)</h2>
+        <a href="#" class="download-btn" id="download-tips">下載 TIPS 30 天</a>
       </div>
       <div class="tradingview-widget-container">
         <div id="tradingview_tips"></div>
@@ -258,7 +153,7 @@
           new TradingView.widget({
             "width": "100%",
             "height": 400,
-            "symbol": "FRED:DFII10",
+            "symbol": "FRED:T10YIE",
             "interval": "D",
             "timezone": "Etc/UTC",
             "theme": "light",
@@ -273,21 +168,21 @@
       </div>
     </div>
 
-    <!-- 分隔線 -->
     <div class="divider"></div>
 
-    <!-- 美債殖利率圖表 -->
-    <div id="treasury-section" class="section">
+    <!-- 美國債利率 -->
+    <div id="us-bond-section" class="section">
       <div class="chart-header">
-        <h2>美債殖利率 (%)</h2>
+        <h2>美國債利率 (%)</h2>
+        <a href="#" class="download-btn" id="download-us-bond">下載美國債 30 天</a>
       </div>
       <div class="tradingview-widget-container">
-        <div id="tradingview_treasury"></div>
+        <div id="tradingview_us_bond"></div>
         <script>
           new TradingView.widget({
             "width": "100%",
             "height": 400,
-            "symbol": "US10Y",
+            "symbol": "TVC:US10Y",
             "interval": "D",
             "timezone": "Etc/UTC",
             "theme": "light",
@@ -296,19 +191,19 @@
             "toolbar_bg": "#d6e8ee",
             "enable_publishing": false,
             "allow_symbol_change": false,
-            "container_id": "tradingview_treasury"
+            "container_id": "tradingview_us_bond"
           });
         </script>
       </div>
     </div>
 
-    <!-- 分隔線 -->
     <div class="divider"></div>
 
-    <!-- 美元指數圖表 -->
+    <!-- 美元指數 -->
     <div id="dxy-section" class="section">
       <div class="chart-header">
         <h2>美元指數 (DXY)</h2>
+        <a href="#" class="download-btn" id="download-dxy">下載美元指數 30 天</a>
       </div>
       <div class="tradingview-widget-container">
         <div id="tradingview_dxy"></div>
@@ -316,7 +211,7 @@
           new TradingView.widget({
             "width": "100%",
             "height": 400,
-            "symbol": "DX",
+            "symbol": "TVC:DXY",
             "interval": "D",
             "timezone": "Etc/UTC",
             "theme": "light",
@@ -331,24 +226,38 @@
       </div>
     </div>
 
-    <!-- 分隔線 -->
     <div class="divider"></div>
 
-    <!-- VIX 恐慌指數圖表（使用 Chart.js） -->
+    <!-- VIX 恐慌指數 -->
     <div id="vix-section" class="section">
       <div class="chart-header">
         <h2>VIX 恐慌指數</h2>
         <a href="#" class="download-btn" id="download-vix">下載 VIX 30 天</a>
       </div>
-      <div class="chart-container">
-        <canvas id="vix-chart"></canvas>
+      <div class="tradingview-widget-container">
+        <div id="tradingview_vix"></div>
+        <script>
+          new TradingView.widget({
+            "width": "100%",
+            "height": 400,
+            "symbol": "CBOE:VIX",
+            "interval": "D",
+            "timezone": "Etc/UTC",
+            "theme": "light",
+            "style": "1",
+            "locale": "zh_TW",
+            "toolbar_bg": "#d6e8ee",
+            "enable_publishing": false,
+            "allow_symbol_change": false,
+            "container_id": "tradingview_vix"
+          });
+        </script>
       </div>
     </div>
 
-    <!-- 分隔線 -->
     <div class="divider"></div>
 
-    <!-- 日元匯率圖表 -->
+    <!-- 日元匯率 -->
     <div id="usdjpy-section" class="section">
       <div class="chart-header">
         <h2>日元匯率 (USD/JPY)</h2>
@@ -376,99 +285,39 @@
     </div>
   </div>
 
-  <!-- 浮動 TOP 按鈕 -->
-  <a id="floating-top-btn" class="floating-top-btn" href="#top">↑</a>
-
-  <!-- JavaScript 程式碼：抓取數據並生成 CSV，以及浮動按鈕的顯示邏輯 -->
   <script>
-    // API Key 已填入
-    const ALPHA_VANTAGE_API_KEY = '3NWX2KKEI69BSULF'; // Alpha Vantage API Key
-    const FRED_API_KEY = '8aa6147667ab7a4204789f2ef1a3588e'; // FRED API Key
+    const ALPHA_VANTAGE_API_KEY = '3NWX2KKEI69BSULF';
 
-    // 定義數據來源
     const dataSources = [
-      {
-        name: '黃金價格 (美元/盎司)',
-        symbol: 'GOLD',
-        api: 'alpha',
-        url: `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=GOLD&apikey=${ALPHA_VANTAGE_API_KEY}`
-      },
-      {
-        name: 'TIPS 實質利率 (%)',
-        symbol: 'DFII10',
-        api: 'fred',
-        url: `https://api.stlouisfed.org/fred/series/observations?series_id=DFII10&api_key=${FRED_API_KEY}&file_type=json&sort_order=desc`
-      },
-      {
-        name: '美債殖利率 (%)',
-        symbol: 'DGS10',
-        api: 'fred',
-        url: `https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=${FRED_API_KEY}&file_type=json&sort_order=desc`
-      },
-      {
-        name: '美元指數 (DXY)',
-        symbol: 'DTWEXBGS',
-        api: 'fred',
-        url: `https://api.stlouisfed.org/fred/series/observations?series_id=DTWEXBGS&api_key=${FRED_API_KEY}&file_type=json&sort_order=desc`
-      },
-      {
-        name: 'VIX 恐慌指數',
-        symbol: 'VIXCLS',
-        api: 'fred',
-        url: `https://api.stlouisfed.org/fred/series/observations?series_id=VIXCLS&api_key=${FRED_API_KEY}&file_type=json&sort_order=desc`
-      },
-      {
-        name: '日元匯率 (USD/JPY)',
-        symbol: 'USDJPY',
-        api: 'alpha',
-        url: `https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=USD&to_symbol=JPY&apikey=${ALPHA_VANTAGE_API_KEY}`
-      }
+      { name: '黃金價格 (美元/盎司)', symbol: 'GOLD', api: 'alpha', url: `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=GOLD&apikey=${ALPHA_VANTAGE_API_KEY}` },
+      { name: 'TIPS 實質利率 (%)', symbol: 'FRED:T10YIE', api: 'tradingview' },
+      { name: '美國債利率 (%)', symbol: 'TVC:US10Y', api: 'tradingview' },
+      { name: '美元指數 (DXY)', symbol: 'TVC:DXY', api: 'tradingview' },
+      { name: 'VIX 恐慌指數', symbol: 'CBOE:VIX', api: 'tradingview' },
+      { name: '日元匯率 (USD/JPY)', symbol: 'USDJPY', api: 'alpha', url: `https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=USD&to_symbol=JPY&apikey=${ALPHA_VANTAGE_API_KEY}` }
     ];
 
-    // 抓取單一數據並格式化的函數
     async function fetchData(source) {
+      if (source.api === 'tradingview') return null; // TradingView 數據無法直接抓取，僅用於下載提示
       try {
         const response = await fetch(source.url);
         const data = await response.json();
-
-        let timeSeries;
-        if (source.api === 'alpha') {
-          timeSeries = data['Time Series (Daily)'] || data['Time Series FX (Daily)'];
-          if (!timeSeries) {
-            throw new Error(`${source.name} 數據獲取失敗: ${JSON.stringify(data)}`);
-          }
-
-          const entries = Object.entries(timeSeries).slice(0, 30); // 取最近 30 天的數據
-          return entries.map(([date, values]) => ({
-            date,
-            value: parseFloat(values['4. close']).toFixed(2)
-          }));
-        } else if (source.api === 'fred') {
-          const observations = data.observations;
-          if (!observations) {
-            throw new Error(`${source.name} 數據獲取失敗: ${JSON.stringify(data)}`);
-          }
-
-          const entries = observations.slice(0, 30); // 取最近 30 天的數據
-          return entries.map(entry => ({
-            date: entry.date,
-            value: entry.value !== '.' ? parseFloat(entry.value).toFixed(2) : 'N/A'
-          }));
-        }
+        let timeSeries = data['Time Series (Daily)'] || data['Time Series FX (Daily)'];
+        if (!timeSeries) throw new Error(`${source.name} 數據獲取失敗`);
+        const entries = Object.entries(timeSeries).slice(0, 30);
+        return entries.map(([date, values]) => ({
+          date,
+          value: parseFloat(values['4. close']).toFixed(2)
+        }));
       } catch (error) {
         console.error(`抓取 ${source.name} 數據時發生錯誤:`, error);
-        return null; // 返回 null 表示抓取失敗
+        return null;
       }
     }
 
-    // 生成並下載 CSV 的函數
     function downloadCSV(data, filename) {
-      const sortedData = data.sort((a, b) => b.date.localeCompare(a.date)); // 按日期降序
-      const csvRows = [
-        '日期,數值', // CSV 標頭，確保使用逗號分隔
-        ...sortedData.map(item => `${item.date},${item.value}`) // 每行數據使用逗號分隔
-      ].join('\r\n'); // 使用 \r\n 作為換行符，確保兼容性
-
+      const sortedData = data.sort((a, b) => b.date.localeCompare(a.date));
+      const csvRows = ['日期,數值', ...sortedData.map(item => `${item.date},${item.value}`)].join('\r\n');
       const blob = new Blob([csvRows], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -479,111 +328,40 @@
       document.body.removeChild(link);
     }
 
-    // 繪製 VIX 圖表的函數（使用 Chart.js）
-    async function drawVixChart() {
-      const vixSource = dataSources.find(source => source.name === 'VIX 恐慌指數');
-      const data = await fetchData(vixSource);
-      if (!data) {
-        console.error('無法抓取 VIX 數據，無法繪製圖表。');
-        return;
-      }
-
-      // 過濾掉無效數據（例如 'N/A'）
-      const filteredData = data.filter(item => item.value !== 'N/A');
-      const labels = filteredData.map(item => item.date).reverse(); // 日期（X軸），反轉以從舊到新
-      const values = filteredData.map(item => parseFloat(item.value)).reverse(); // 數值（Y軸）
-
-      const ctx = document.getElementById('vix-chart').getContext('2d');
-      new Chart(ctx, {
-        type: 'line', // 折線圖
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'VIX 恐慌指數',
-            data: values,
-            borderColor: '#0d5d8c', // 與主題一致的藍色
-            backgroundColor: 'rgba(13, 93, 140, 0.2)', // 填充色
-            fill: true,
-            tension: 0.3 // 折線平滑度
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: '日期'
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: 'VIX 指數'
-              },
-              beginAtZero: true
-            }
-          },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top'
-            }
-          }
-        }
-      });
-    }
-
-    // 當頁面加載完成時繪製 VIX 圖表
-    window.addEventListener('load', () => {
-      drawVixChart();
-    });
-
-    // 下載黃金數據
     document.getElementById('download-gold').addEventListener('click', async (event) => {
       event.preventDefault();
       const goldSource = dataSources.find(source => source.name === '黃金價格 (美元/盎司)');
       const data = await fetchData(goldSource);
-      if (data) {
-        downloadCSV(data, 'gold_30_days.csv');
-      } else {
-        alert('無法抓取黃金數據，請檢查控制台錯誤訊息。');
-      }
+      if (data) downloadCSV(data, 'gold_30_days.csv');
+      else alert('無法抓取黃金數據，請檢查控制台錯誤訊息。');
     });
 
-    // 下載 VIX 數據
-    document.getElementById('download-vix').addEventListener('click', async (event) => {
+    document.getElementById('download-tips').addEventListener('click', (event) => {
       event.preventDefault();
-      const vixSource = dataSources.find(source => source.name === 'VIX 恐慌指數');
-      const data = await fetchData(vixSource);
-      if (data) {
-        downloadCSV(data, 'vix_30_days.csv');
-      } else {
-        alert('無法抓取 VIX 數據，請檢查控制台錯誤訊息。');
-      }
+      alert('TIPS 數據無法直接下載，請查看圖表或使用其他數據來源。');
     });
 
-    // 下載日元數據
+    document.getElementById('download-us-bond').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('美國債利率數據無法直接下載，請查看圖表或使用其他數據來源。');
+    });
+
+    document.getElementById('download-dxy').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('美元指數數據無法直接下載，請查看圖表或使用其他數據來源。');
+    });
+
+    document.getElementById('download-vix').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('VIX 數據無法直接下載，請查看圖表或使用其他數據來源。');
+    });
+
     document.getElementById('download-usdjpy').addEventListener('click', async (event) => {
       event.preventDefault();
       const usdjpySource = dataSources.find(source => source.name === '日元匯率 (USD/JPY)');
       const data = await fetchData(usdjpySource);
-      if (data) {
-        downloadCSV(data, 'usdjpy_30_days.csv');
-      } else {
-        alert('無法抓取日元數據，請檢查控制台錯誤訊息。');
-      }
-    });
-
-    // 浮動 TOP 按鈕顯示邏輯
-    const floatingTopBtn = document.getElementById('floating-top-btn');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) { // 滾動超過 300px 時顯示按鈕
-        floatingTopBtn.classList.add('visible');
-      } else {
-        floatingTopBtn.classList.remove('visible');
-      }
+      if (data) downloadCSV(data, 'usdjpy_30_days.csv');
+      else alert('無法抓取日元數據，請檢查控制台錯誤訊息。');
     });
   </script>
 </body>
