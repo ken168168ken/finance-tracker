@@ -115,7 +115,7 @@
       z-index: 1000; /* 確保在最上層 */
     }
     .floating-top-btn:hover {
-      background-color: #1a759f; /* 懸停時變為正文顏色 */
+      background-color: #1a759f; /* 按鈕懸停時變為正文顏色 */
     }
     .floating-top-btn.visible {
       opacity: 1; /* 滾動後顯示 */
@@ -333,7 +333,7 @@
           new TradingView.widget({
             "width": "100%",
             "height": 400,
-            "symbol": "VIX",
+            "symbol": "CBOE:VIX", // 修正為正確的 VIX 符號
             "interval": "D",
             "timezone": "Etc/UTC",
             "theme": "light",
@@ -341,7 +341,7 @@
             "locale": "zh_TW",
             "toolbar_bg": "#d6e8ee",
             "enable_publishing": false,
-            "allow_symbol_change": false   "allow_symbol_change": false,
+            "allow_symbol_change": false,
             "container_id": "tradingview_vix"
           });
         </script>
