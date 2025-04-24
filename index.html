@@ -17,12 +17,26 @@
       margin: 0 auto;
       padding: 20px;
     }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .logo {
+      position: absolute;
+      left: 0;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #0d5d8c;
+    }
     h1 {
       font-family: 'Lora', serif;
       color: #0d5d8c;
       text-align: center;
       font-size: 2.5em;
-      margin-bottom: 20px;
+      margin: 0;
     }
     h2 {
       font-family: 'Lora', serif;
@@ -71,13 +85,6 @@
       background: linear-gradient(to right, #0d5d8c, #d6e8ee, #0d5d8c);
       margin: 30px 0;
     }
-    @media (max-width: 768px) {
-      h1 { font-size: 2em; }
-      h2 { font-size: 1.5em; }
-      .section { padding: 15px; }
-      .tradingview-widget-container { height: 300px; }
-      .download-btn { padding: 6px 10px; font-size: 0.9em; }
-    }
     .nav-bar {
       display: flex;
       justify-content: center;
@@ -95,18 +102,54 @@
     .nav-btn:hover {
       background-color: #1a759f;
     }
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #0d5d8c;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 50%;
+      text-decoration: none;
+      font-size: 1.2em;
+      display: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .back-to-top:hover {
+      background-color: #1a759f;
+    }
+    .error-message {
+      color: #d9534f;
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #d9534f;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    @media (max-width: 768px) {
+      h1 { font-size: 2em; }
+      h2 { font-size: 1.5em; }
+      .section { padding: 15px; }
+      .tradingview-widget-container { height: 300px; }
+      .download-btn { padding: 6px 10px; font-size: 0.9em; }
+      .logo { font-size: 1.2em; }
+      .back-to-top { padding: 8px 12px; font-size: 1em; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>財經數據追蹤</h1>
+    <div class="header">
+      <div class="logo">📈 財經追蹤</div>
+      <h1>財經數據追蹤</h1>
+    </div>
 
     <!-- 導航欄 -->
     <div class="nav-bar">
       <a href="#gold-section" class="nav-btn">黃金價格</a>
       <a href="#tips-section" class="nav-btn">TIPS 實質利率</a>
       <a href="#us-bond-section" class="nav-btn">美國債利率</a>
-      <a href="#usdjpy-section" class="nav-btn">美元指數</a>
+      <a href="#dxy-section" class="nav-btn">美元指數</a>
       <a href="#vix-section" class="nav-btn">VIX 恐慌指數</a>
       <a href="#usdjpy-section" class="nav-btn">日元匯率</a>
     </div>
@@ -206,23 +249,9 @@
         <a href="#" class="download-btn" id="download-dxy">下載美元指數 30 天</a>
       </div>
       <div class="tradingview-widget-container">
-        <div id="tradingview_dxy"></div>
-        <script>
-          new TradingView.widget({
-            "width": "100%",
-            "height": 400,
-            "symbol": "TVC:DXY",
-            "interval": "D",
-            "timezone": "Etc/UTC",
-            "theme": "light",
-            "style": "1",
-            "locale": "zh_TW",
-            "toolbar_bg": "#d6e8ee",
-            "enable_publishing": false,
-            "allow_symbol_change": false,
-            "container_id": "tradingview_dxy"
-          });
-        </script>
+        <div class="error-message">
+          美元指數 (DXY) 圖表目前無法顯示，請直接訪問 <a href="https://www.tradingview.com/symbols/TVC-DXY/" target="_blank">TradingView</a> 查看。
+        </div>
       </div>
     </div>
 
@@ -235,23 +264,9 @@
         <a href="#" class="download-btn" id="download-vix">下載 VIX 30 天</a>
       </div>
       <div class="tradingview-widget-container">
-        <div id="tradingview_vix"></div>
-        <script>
-          new TradingView.widget({
-            "width": "100%",
-            "height": 400,
-            "symbol": "CBOE:VIX",
-            "interval": "D",
-            "timezone": "Etc/UTC",
-            "theme": "light",
-            "style": "1",
-            "locale": "zh_TW",
-            "toolbar_bg": "#d6e8ee",
-            "enable_publishing": false,
-            "allow_symbol_change": false,
-            "container_id": "tradingview_vix"
-          });
-        </script>
+        <div class="error-message">
+          VIX 恐慌指數圖表目前無法顯示，請直接訪問 <a href="https://www.tradingview.com/symbols/CBOE-VIX/" target="_blank">TradingView</a> 查看。
+        </div>
       </div>
     </div>
 
@@ -285,6 +300,9 @@
     </div>
   </div>
 
+  <!-- 回到頁首按鈕 -->
+  <a href="#" class="back-to-top" id="back-to-top">↑</a>
+
   <script>
     const ALPHA_VANTAGE_API_KEY = '3NWX2KKEI69BSULF';
 
@@ -294,75 +312,4 @@
       { name: '美國債利率 (%)', symbol: 'TVC:US10Y', api: 'tradingview' },
       { name: '美元指數 (DXY)', symbol: 'TVC:DXY', api: 'tradingview' },
       { name: 'VIX 恐慌指數', symbol: 'CBOE:VIX', api: 'tradingview' },
-      { name: '日元匯率 (USD/JPY)', symbol: 'USDJPY', api: 'alpha', url: `https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=USD&to_symbol=JPY&apikey=${ALPHA_VANTAGE_API_KEY}` }
-    ];
-
-    async function fetchData(source) {
-      if (source.api === 'tradingview') return null; // TradingView 數據無法直接抓取，僅用於下載提示
-      try {
-        const response = await fetch(source.url);
-        const data = await response.json();
-        let timeSeries = data['Time Series (Daily)'] || data['Time Series FX (Daily)'];
-        if (!timeSeries) throw new Error(`${source.name} 數據獲取失敗`);
-        const entries = Object.entries(timeSeries).slice(0, 30);
-        return entries.map(([date, values]) => ({
-          date,
-          value: parseFloat(values['4. close']).toFixed(2)
-        }));
-      } catch (error) {
-        console.error(`抓取 ${source.name} 數據時發生錯誤:`, error);
-        return null;
-      }
-    }
-
-    function downloadCSV(data, filename) {
-      const sortedData = data.sort((a, b) => b.date.localeCompare(a.date));
-      const csvRows = ['日期,數值', ...sortedData.map(item => `${item.date},${item.value}`)].join('\r\n');
-      const blob = new Blob([csvRows], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    document.getElementById('download-gold').addEventListener('click', async (event) => {
-      event.preventDefault();
-      const goldSource = dataSources.find(source => source.name === '黃金價格 (美元/盎司)');
-      const data = await fetchData(goldSource);
-      if (data) downloadCSV(data, 'gold_30_days.csv');
-      else alert('無法抓取黃金數據，請檢查控制台錯誤訊息。');
-    });
-
-    document.getElementById('download-tips').addEventListener('click', (event) => {
-      event.preventDefault();
-      alert('TIPS 數據無法直接下載，請查看圖表或使用其他數據來源。');
-    });
-
-    document.getElementById('download-us-bond').addEventListener('click', (event) => {
-      event.preventDefault();
-      alert('美國債利率數據無法直接下載，請查看圖表或使用其他數據來源。');
-    });
-
-    document.getElementById('download-dxy').addEventListener('click', (event) => {
-      event.preventDefault();
-      alert('美元指數數據無法直接下載，請查看圖表或使用其他數據來源。');
-    });
-
-    document.getElementById('download-vix').addEventListener('click', (event) => {
-      event.preventDefault();
-      alert('VIX 數據無法直接下載，請查看圖表或使用其他數據來源。');
-    });
-
-    document.getElementById('download-usdjpy').addEventListener('click', async (event) => {
-      event.preventDefault();
-      const usdjpySource = dataSources.find(source => source.name === '日元匯率 (USD/JPY)');
-      const data = await fetchData(usdjpySource);
-      if (data) downloadCSV(data, 'usdjpy_30_days.csv');
-      else alert('無法抓取日元數據，請檢查控制台錯誤訊息。');
-    });
-  </script>
-</body>
-</html>
+      { name: '日元匯率 (USD/JPY)', symbol: 'USDJPY', api: 'alpha', url: `https://www.alphavantage.co/query?function=FX_DAILY&from
