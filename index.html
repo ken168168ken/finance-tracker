@@ -20,6 +20,7 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
+      position: relative; /* 為 LOGO 按鈕提供定位上下文 */
     }
     h1 {
       font-family: 'Lora', serif;
@@ -119,14 +120,14 @@
     .floating-top-btn.visible {
       opacity: 1; /* 滾動後顯示 */
     }
-    /* 右上角圓形 LOGO 按鈕 */
+    /* 右上角圓形 LOGO 按鈕（固定在頁首） */
     .logo-btn {
-      position: fixed;
+      position: absolute;
       top: 20px;
       right: 20px;
       width: 60px;
       height: 60px;
-      background-image: url('https://i.imgur.com/abc123.png'); /* 替換為您的 LOGO 圖片 URL */
+      background-image: url('https://github.com/ken168168ken/finance-tracker/blob/main/IMG_0413.jpg?raw=true'); /* 使用您提供的圖片網址 */
       background-size: cover;
       background-position: center;
       border-radius: 50%; /* 圓形設計 */
@@ -185,10 +186,10 @@
 </head>
 <body>
   <div id="top"></div> <!-- 頁面頂部錨點 -->
-  <!-- 右上角 LOGO 按鈕 -->
-  <a href="/" class="logo-btn" title="回到首頁"></a> <!-- 點擊後跳轉到首頁，您可以修改 href 為其他連結 -->
-  
   <div class="container">
+    <!-- 右上角 LOGO 按鈕（固定在頁首） -->
+    <a href="/" class="logo-btn" title="回到首頁"></a> <!-- 點擊後跳轉到首頁，您可以修改 href 為其他連結 -->
+    
     <h1>財經數據追蹤</h1>
     
     <!-- 導航按鈕 -->
@@ -340,7 +341,7 @@
             "locale": "zh_TW",
             "toolbar_bg": "#d6e8ee",
             "enable_publishing": false,
-            "allow_symbol_change": false,
+            "allow_symbol_change": false   "allow_symbol_change": false,
             "container_id": "tradingview_vix"
           });
         </script>
