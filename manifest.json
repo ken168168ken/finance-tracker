@@ -8,12 +8,12 @@
   "theme_color": "#0d5d8c",
   "icons": [
     {
-      "src": "https://github.com/ken168168ken/finance-tracker/raw/main/icon-192x192.png",
+      "src": "https://github.com/ken168168ken/finance-tracker/blob/main/icons_1_192.jpg?raw=true",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://github.com/ken168168ken/finance-tracker/raw/main/icon-512x512.png",
+      "src": "https://github.com/ken168168ken/finance-tracker/blob/main/icons_1_512.jpg?raw=true",
       "sizes": "512x512",
       "type": "image/png"
     }
