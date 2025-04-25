@@ -160,7 +160,6 @@
       <a href="#tips-section" class="nav-btn">TIPS 實質利率</a>
       <a href="#us-bond-section" class="nav-btn">美國債利率</a>
       <a href="#dxy-section" class="nav-btn">美元指數</a>
-      <a href="#vix-section" class="nav-btn">VIX 恐慌指數</a>
       <a href="#usdjpy-section" class="nav-btn">日元匯率</a>
     </div>
 
@@ -183,7 +182,7 @@
             "theme": "light",
             "style": "1",
             "locale": "zh_TW",
-            "toolbar_bg": "#d6e8ee",
+            "toolbar_bg": "transparent",
             "enable_publishing": false,
             "allow_symbol_change": false,
             "container_id": "tradingview_gold"
@@ -227,7 +226,7 @@
     <div id="us-bond-section" class="section">
       <div class="chart-header">
         <h2>美國債利率 (%)</h2>
-        <a href="#" class="download-btn" id="download-us-bond">下載美國債 30 天</a>
+        <a href="# " class="download-btn" id="download-us-bond">下載美國債 30 天</a>
       </div>
       <div class="chart-container">
         <canvas id="us-bond-chart"></canvas>
@@ -258,35 +257,6 @@
             "enable_publishing": false,
             "allow_symbol_change": false,
             "container_id": "tradingview_dxy"
-          });
-        </script>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- VIX 恐慌指數 -->
-    <div id="vix-section" class="section">
-      <div class="chart-header">
-        <h2>VIX 恐慌指數</h2>
-        <a href="#" class="download-btn" id="download-vix">下載 VIX 30 天</a>
-      </div>
-      <div class="tradingview-widget-container">
-        <div id="tradingview_vix"></div>
-        <script>
-          new TradingView.widget({
-            "width": "100%",
-            "height": 400,
-            "symbol": "TVC:VIX",
-            "interval": "D",
-            "timezone": "Etc/UTC",
-            "theme": "light",
-            "style": "1",
-            "locale": "zh_TW",
-            "toolbar_bg": "transparent",
-            "enable_publishing": false,
-            "allow_symbol_change": false,
-            "container_id": "tradingview_vix"
           });
         </script>
       </div>
@@ -333,7 +303,6 @@
       { name: 'TIPS 實質利率 (%)', symbol: 'FRED:T10YIE', api: 'tradingview' },
       { name: '美國債利率 (%)', symbol: 'BOND', api: 'alpha', url: `https://www.alphavantage.co/query?function=TREASURY_YIELD&interval=daily&maturity=10year&apikey=${ALPHA_VANTAGE_API_KEY}` },
       { name: '美元指數 (DXY)', symbol: 'INDEX:DXY', api: 'tradingview' },
-      { name: 'VIX 恐慌指數', symbol: 'TVC:VIX', api: 'tradingview' },
       { name: '日元匯率 (USD/JPY)', symbol: 'USDJPY', api: 'alpha', url: `https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=USD&to_symbol=JPY&apikey=${ALPHA_VANTAGE_API_KEY}` }
     ];
 
@@ -451,12 +420,6 @@
     document.getElementById('download-dxy').addEventListener('click', (event) => {
       event.preventDefault();
       alert('美元指數數據無法直接下載，請查看圖表或使用其他數據來源。');
-    });
-
-    // VIX 下載（TradingView 無法直接下載）
-    document.getElementById('download-vix').addEventListener('click', (event) => {
-      event.preventDefault();
-      alert('VIX 數據無法直接下載，請查看圖表或使用其他數據來源。');
     });
 
     // 日元匯率下載
