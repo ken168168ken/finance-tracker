@@ -242,8 +242,24 @@
         <h2>美元指數 (DXY)</h2>
         <a href="#" class="download-btn" id="download-dxy">下載美元指數 30 天</a>
       </div>
-      <div class="chart-container">
-        <canvas id="dxy-chart"></canvas>
+      <div class="tradingview-widget-container">
+        <div id="tradingview_dxy"></div>
+        <script>
+          new TradingView.widget({
+            "width": "100%",
+            "height": 400,
+            "symbol": "INDEX:DXY",
+            "interval": "D",
+            "timezone": "Etc/UTC",
+            "theme": "light",
+            "style": "1",
+            "locale": "zh_TW",
+            "toolbar_bg": "#d6e8ee",
+            "enable_publishing": false,
+            "allow_symbol_change": false,
+            "container_id": "tradingview_dxy"
+          });
+        </script>
       </div>
     </div>
 
@@ -255,8 +271,24 @@
         <h2>VIX 恐慌指數</h2>
         <a href="#" class="download-btn" id="download-vix">下載 VIX 30 天</a>
       </div>
-      <div class="chart-container">
-        <canvas id="vix-chart"></canvas>
+      <div class="tradingview-widget-container">
+        <div id="tradingview_vix"></div>
+        <script>
+          new TradingView.widget({
+            "width": "100%",
+            "height": 400,
+            "symbol": "CBOE:VIX",
+            "interval": "D",
+            "timezone": "Etc/UTC",
+            "theme": "light",
+            "style": "1",
+            "locale": "zh_TW",
+            "toolbar_bg": "#d6e8ee",
+            "enable_publishing": false,
+            "allow_symbol_change": false,
+            "container_id": "tradingview_vix"
+          });
+        </script>
       </div>
     </div>
 
@@ -295,14 +327,13 @@
 
   <script>
     const ALPHA_VANTAGE_API_KEY = '3NWX2KKEI69BSULF';
-    const FRED_API_KEY = '8aa6147667ab7a4204789f2ef1a3588e';
 
     const dataSources = [
       { name: '黃金價格 (美元/盎司)', symbol: 'GOLD', api: 'alpha', url: `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=GOLD&apikey=${ALPHA_VANTAGE_API_KEY}` },
       { name: 'TIPS 實質利率 (%)', symbol: 'FRED:T10YIE', api: 'tradingview' },
       { name: '美國債利率 (%)', symbol: 'BOND', api: 'alpha', url: `https://www.alphavantage.co/query?function=TREASURY_YIELD&interval=daily&maturity=10year&apikey=${ALPHA_VANTAGE_API_KEY}` },
-      { name: '美元指數 (DXY)', symbol: 'DXY', api: 'fred', url: `https://api.stlouisfed.org/fred/series/observations?series_id=DXY&api_key=${FRED_API_KEY}&file_type=json&limit=30&sort_order=desc` },
-      { name: 'VIX 恐慌指數', symbol: 'VIXCLS', api: 'fred', url: `https://api.stlouisfed.org/fred/series/observations?series_id=VIXCLS&api_key=${FRED_API_KEY}&file_type=json&limit=30&sort_order=desc` },
+      { name: '美元指數 (DXY)', symbol: 'INDEX:DXY', api: 'tradingview' },
+      { name: 'VIX 恐慌指數', symbol: 'CBOE:VIX', api: 'tradingview' },
       { name: '日元匯率 (USD/JPY)', symbol: 'USDJPY', api: 'alpha', url: `https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=USD&to_symbol=JPY&apikey=${ALPHA_VANTAGE_API_KEY}` }
     ];
 
@@ -311,18 +342,7 @@
         const response = await fetch(source.url);
         const data = await response.json();
         
-        if (source.api === 'fred') {
-          const observations = data.observations;
-          if (!observations) throw new Error(`${source.name} 數據獲取失敗`);
-          const filteredData = observations
-            .filter(item => item.value !== '.' && item.value !== 'NaN') // 過濾無效數據
-            .slice(0, 30); // 確保最多 30 筆數據
-          if (filteredData.length === 0) throw new Error(`${source.name} 無有效數據`);
-          return filteredData.map(item => ({
-            date: item.date,
-            value: parseFloat(item.value).toFixed(2)
-          }));
-        } else if (source.api === 'alpha') {
+        if (source.api === 'alpha') {
           let timeSeries = data['Time Series (Daily)'] || data['Time Series FX (Daily)'] || data['data'];
           if (!timeSeries) throw new Error(`${source.name} 數據獲取失敗`);
           const entries = Array.isArray(timeSeries) ? timeSeries : Object.entries(timeSeries);
@@ -427,43 +447,17 @@
       }
     })();
 
-    // 美元指數圖表與下載
-    (async () => {
-      const dxySource = dataSources.find(source => source.name === '美元指數 (DXY)');
-      const data = await fetchData(dxySource);
-      if (data && data.length > 0) {
-        renderChart('dxy-chart', data, '美元指數 (DXY)');
-        document.getElementById('download-dxy').addEventListener('click', (event) => {
-          event.preventDefault();
-          downloadCSV(data, 'dxy_30_days.csv');
-        });
-      } else {
-        document.getElementById('dxy-chart').parentElement.innerHTML = '<div class="error-message">無法載入美元指數數據，請稍後再試或檢查 FRED API 金鑰。</div>';
-        document.getElementById('download-dxy').addEventListener('click', (event) => {
-          event.preventDefault();
-          alert('無法抓取美元指數數據，請檢查控制台錯誤訊息。');
-        });
-      }
-    })();
+    // 美元指數下載（TradingView 無法直接下載）
+    document.getElementById('download-dxy').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('美元指數數據無法直接下載，請查看圖表或使用其他數據來源。');
+    });
 
-    // VIX 圖表與下載
-    (async () => {
-      const vixSource = dataSources.find(source => source.name === 'VIX 恐慌指數');
-      const data = await fetchData(vixSource);
-      if (data && data.length > 0) {
-        renderChart('vix-chart', data, 'VIX 恐慌指數');
-        document.getElementById('download-vix').addEventListener('click', (event) => {
-          event.preventDefault();
-          downloadCSV(data, 'vix_30_days.csv');
-        });
-      } else {
-        document.getElementById('vix-chart').parentElement.innerHTML = '<div class="error-message">無法載入 VIX 數據，請稍後再試或檢查 FRED API 金鑰。</div>';
-        document.getElementById('download-vix').addEventListener('click', (event) => {
-          event.preventDefault();
-          alert('無法抓取 VIX 數據，請檢查控制台錯誤訊息。');
-        });
-      }
-    })();
+    // VIX 下載（TradingView 無法直接下載）
+    document.getElementById('download-vix').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('VIX 數據無法直接下載，請查看圖表或使用其他數據來源。');
+    });
 
     // 日元匯率下載
     document.getElementById('download-usdjpy').addEventListener('click', async (event) => {
