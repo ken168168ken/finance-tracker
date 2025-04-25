@@ -1,0 +1,21 @@
+{
+  "name": "財經數據追蹤",
+  "short_name": "財經追蹤",
+  "description": "追蹤黃金價格、TIPS、美國債利率、美元指數和日元匯率",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f6f0",
+  "theme_color": "#0d5d8c",
+  "icons": [
+    {
+      "src": "https://github.com/ken168168ken/finance-tracker/raw/main/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://github.com/ken168168ken/finance-tracker/raw/main/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
