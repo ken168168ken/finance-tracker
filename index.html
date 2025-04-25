@@ -197,7 +197,6 @@
     <div id="tips-section" class="section">
       <div class="chart-header">
         <h2>TIPS 實質利率 (%)</h2>
-        <a href="#" class="download-btn" id="download-tips">下載 TIPS 30 天</a>
       </div>
       <div class="tradingview-widget-container">
         <div id="tradingview_tips"></div>
@@ -226,7 +225,6 @@
     <div id="us-bond-section" class="section">
       <div class="chart-header">
         <h2>美國債利率 (%)</h2>
-        <a href="# " class="download-btn" id="download-us-bond">下載美國債 30 天</a>
       </div>
       <div class="chart-container">
         <canvas id="us-bond-chart"></canvas>
@@ -239,7 +237,6 @@
     <div id="dxy-section" class="section">
       <div class="chart-header">
         <h2>美元指數 (DXY)</h2>
-        <a href="#" class="download-btn" id="download-dxy">下載美元指數 30 天</a>
       </div>
       <div class="tradingview-widget-container">
         <div id="tradingview_dxy"></div>
@@ -391,36 +388,16 @@
       else alert('無法抓取黃金數據，請檢查控制台錯誤訊息。');
     });
 
-    // TIPS 下載
-    document.getElementById('download-tips').addEventListener('click', (event) => {
-      event.preventDefault();
-      alert('TIPS 數據無法直接下載，請查看圖表或使用其他數據來源。');
-    });
-
-    // 美國債利率圖表與下載
+    // 美國債利率圖表
     (async () => {
       const usBondSource = dataSources.find(source => source.name === '美國債利率 (%)');
       const data = await fetchData(usBondSource);
       if (data) {
         renderChart('us-bond-chart', data, '美國債利率 (%)');
-        document.getElementById('download-us-bond').addEventListener('click', (event) => {
-          event.preventDefault();
-          downloadCSV(data, 'us_bond_30_days.csv');
-        });
       } else {
         document.getElementById('us-bond-chart').parentElement.innerHTML = '<div class="error-message">無法載入美國債利率數據，請稍後再試。</div>';
-        document.getElementById('download-us-bond').addEventListener('click', (event) => {
-          event.preventDefault();
-          alert('無法抓取美國債利率數據，請檢查控制台錯誤訊息。');
-        });
       }
     })();
-
-    // 美元指數下載（TradingView 無法直接下載）
-    document.getElementById('download-dxy').addEventListener('click', (event) => {
-      event.preventDefault();
-      alert('美元指數數據無法直接下載，請查看圖表或使用其他數據來源。');
-    });
 
     // 日元匯率下載
     document.getElementById('download-usdjpy').addEventListener('click', async (event) => {
