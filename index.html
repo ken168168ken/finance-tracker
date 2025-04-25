@@ -212,7 +212,7 @@
             "theme": "light",
             "style": "1",
             "locale": "zh_TW",
-            "toolbar_bg": "#d6e8ee",
+            "toolbar_bg": "transparent",
             "enable_publishing": false,
             "allow_symbol_change": false,
             "container_id": "tradingview_tips"
@@ -254,7 +254,7 @@
             "theme": "light",
             "style": "1",
             "locale": "zh_TW",
-            "toolbar_bg": "#d6e8ee",
+            "toolbar_bg": "transparent",
             "enable_publishing": false,
             "allow_symbol_change": false,
             "container_id": "tradingview_dxy"
@@ -277,13 +277,13 @@
           new TradingView.widget({
             "width": "100%",
             "height": 400,
-            "symbol": "CBOE:VIX",
+            "symbol": "TVC:VIX",
             "interval": "D",
             "timezone": "Etc/UTC",
             "theme": "light",
             "style": "1",
             "locale": "zh_TW",
-            "toolbar_bg": "#d6e8ee",
+            "toolbar_bg": "transparent",
             "enable_publishing": false,
             "allow_symbol_change": false,
             "container_id": "tradingview_vix"
@@ -312,7 +312,7 @@
             "theme": "light",
             "style": "1",
             "locale": "zh_TW",
-            "toolbar_bg": "#d6e8ee",
+            "toolbar_bg": "transparent",
             "enable_publishing": false,
             "allow_symbol_change": false,
             "container_id": "tradingview_usdjpy"
@@ -333,7 +333,7 @@
       { name: 'TIPS 實質利率 (%)', symbol: 'FRED:T10YIE', api: 'tradingview' },
       { name: '美國債利率 (%)', symbol: 'BOND', api: 'alpha', url: `https://www.alphavantage.co/query?function=TREASURY_YIELD&interval=daily&maturity=10year&apikey=${ALPHA_VANTAGE_API_KEY}` },
       { name: '美元指數 (DXY)', symbol: 'INDEX:DXY', api: 'tradingview' },
-      { name: 'VIX 恐慌指數', symbol: 'CBOE:VIX', api: 'tradingview' },
+      { name: 'VIX 恐慌指數', symbol: 'TVC:VIX', api: 'tradingview' },
       { name: '日元匯率 (USD/JPY)', symbol: 'USDJPY', api: 'alpha', url: `https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=USD&to_symbol=JPY&apikey=${ALPHA_VANTAGE_API_KEY}` }
     ];
 
