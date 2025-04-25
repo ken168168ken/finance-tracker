@@ -27,9 +27,10 @@
     .logo {
       position: absolute;
       left: 0;
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #0d5d8c;
+    }
+    .logo img {
+      height: 40px;
+      border-radius: 5px;
     }
     h1 {
       font-family: 'Lora', serif;
@@ -90,6 +91,7 @@
       justify-content: center;
       gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
     .nav-btn {
       padding: 10px 20px;
@@ -132,15 +134,18 @@
       .section { padding: 15px; }
       .tradingview-widget-container { height: 300px; }
       .download-btn { padding: 6px 10px; font-size: 0.9em; }
-      .logo { font-size: 1.2em; }
+      .logo img { height: 30px; }
       .back-to-top { padding: 8px 12px; font-size: 1em; }
+      .nav-btn { padding: 8px 15px; font-size: 0.9em; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">📈 財經追蹤</div>
+      <div class="logo">
+        <img src="https://github.com/ken168168ken/finance-tracker/blob/2e3c582653e065fa3262aa4b6ce6ea7f9927ca9f/IMG_0413.jpg?raw=true" alt="財經追蹤 LOGO">
+      </div>
       <h1>財經數據追蹤</h1>
     </div>
 
@@ -312,4 +317,90 @@
       { name: '美國債利率 (%)', symbol: 'TVC:US10Y', api: 'tradingview' },
       { name: '美元指數 (DXY)', symbol: 'TVC:DXY', api: 'tradingview' },
       { name: 'VIX 恐慌指數', symbol: 'CBOE:VIX', api: 'tradingview' },
-      { name: '日元匯率 (USD/JPY)', symbol: 'USDJPY', api: 'alpha', url: `https://www.alphavantage.co/query?function=FX_DAILY&from
+      { name: '日元匯率 (USD/JPY)', symbol: 'USDJPY', api: 'alpha', url: `https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=USD&to_symbol=JPY&apikey=${ALPHA_VANTAGE_API_KEY}` }
+    ];
+
+    async function fetchData(source) {
+      if (source.api === 'tradingview') return null;
+      try {
+        const response = await fetch(source.url);
+        const data = await response.json();
+        let timeSeries = data['Time Series (Daily)'] || data['Time Series FX (Daily)'];
+        if (!timeSeries) throw new Error(`${source.name} 數據獲取失敗`);
+        const entries = Object.entries(timeSeries).slice(0, 30);
+        return entries.map(([date, values]) => ({
+          date,
+          value: parseFloat(values['4. close']).toFixed(2)
+        }));
+      } catch (error) {
+        console.error(`抓取 ${source.name} 數據時發生錯誤:`, error);
+        return null;
+      }
+    }
+
+    function downloadCSV(data, filename) {
+      const sortedData = data.sort((a, b) => b.date.localeCompare(a.date));
+      const csvRows = ['日期,數值', ...sortedData.map(item => `${item.date},${item.value}`)].join('\r\n');
+      const blob = new Blob([csvRows], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    document.getElementById('download-gold').addEventListener('click', async (event) => {
+      event.preventDefault();
+      const goldSource = dataSources.find(source => source.name === '黃金價格 (美元/盎司)');
+      const data = await fetchData(goldSource);
+      if (data) downloadCSV(data, 'gold_30_days.csv');
+      else alert('無法抓取黃金數據，請檢查控制台錯誤訊息。');
+    });
+
+    document.getElementById('download-tips').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('TIPS 數據無法直接下載，請查看圖表或使用其他數據來源。');
+    });
+
+    document.getElementById('download-us-bond').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('美國債利率數據無法直接下載，請查看圖表或使用其他數據來源。');
+    });
+
+    document.getElementById('download-dxy').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('美元指數數據無法直接下載，請直接訪問 TradingView 查看：https://www.tradingview.com/symbols/TVC-DXY/');
+    });
+
+    document.getElementById('download-vix').addEventListener('click', (event) => {
+      event.preventDefault();
+      alert('VIX 數據無法直接下載，請直接訪問 TradingView 查看：https://www.tradingview.com/symbols/CBOE-VIX/');
+    });
+
+    document.getElementById('download-usdjpy').addEventListener('click', async (event) => {
+      event.preventDefault();
+      const usdjpySource = dataSources.find(source => source.name === '日元匯率 (USD/JPY)');
+      const data = await fetchData(usdjpySource);
+      if (data) downloadCSV(data, 'usdjpy_30_days.csv');
+      else alert('無法抓取日元數據，請檢查控制台錯誤訊息。');
+    });
+
+    // 回到頁首按鈕的顯示與隱藏
+    const backToTopButton = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    backToTopButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
